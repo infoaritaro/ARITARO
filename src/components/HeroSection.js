@@ -129,7 +129,7 @@ export default function HeroSection() {
 					zIndex: 0,
 					pointerEvents: "none",
 					background: isLight
-						? "#ffffff"
+						? "radial-gradient(ellipse 70% 55% at 50% -10%, rgba(37,99,235,0.12) 0%, transparent 60%), radial-gradient(ellipse 50% 40% at 85% 10%, rgba(14,165,233,0.10) 0%, transparent 55%), linear-gradient(180deg, #F5F8FE 0%, #FFFFFF 100%)"
 						: "radial-gradient(ellipse 80% 50% at 50% -20%, rgba(59,130,246,0.1) 0%, transparent 60%)",
 					WebkitMaskImage: "linear-gradient(to bottom, black calc(100% - 250px), transparent 100%)",
 					maskImage: "linear-gradient(to bottom, black calc(100% - 250px), transparent 100%)",
@@ -137,24 +137,26 @@ export default function HeroSection() {
 					y: prefersReducedMotion ? "0%" : backgroundY,
 				}}
 			>
-				<FloatingLines
-					linesGradient={[
-						"#1E3A8A", // deep blue
-						"#2563EB", // royal blue
-						"#3b82f6", // lighter blue
-						"#1E3A8A", // deep blue
-						"#22d3ee", // cyan accent (sparing)
-					]}
-					enabledWaves={["top", "middle", "bottom"]}
-					lineCount={[4, 6, 4]}
-					lineDistance={[5, 4, 5]}
-					animationSpeed={0.6}
-					interactive={false}
-					parallax={false}
-					mixBlendMode={isLight ? "normal" : "screen"}
-					backgroundColor={isLight ? "#ffffff" : "#000000"}
-					opacity={0.6}
-				/>
+				{!isLight && (
+					<FloatingLines
+						linesGradient={[
+							"#1E3A8A", // deep blue
+							"#2563EB", // royal blue
+							"#3b82f6", // lighter blue
+							"#1E3A8A", // deep blue
+							"#22d3ee", // cyan accent (sparing)
+						]}
+						enabledWaves={["top", "middle", "bottom"]}
+						lineCount={[4, 6, 4]}
+						lineDistance={[5, 4, 5]}
+						animationSpeed={0.6}
+						interactive={false}
+						parallax={false}
+						mixBlendMode="screen"
+						backgroundColor="#000000"
+						opacity={0.6}
+					/>
+				)}
 			</motion.div>
 
 
@@ -201,9 +203,13 @@ export default function HeroSection() {
 						alignItems: "center",
 						marginBottom: 24,
 						borderRadius: 16,
-						background: "rgba(255, 255, 255, 0.05)",
-						boxShadow:
-							"inset 2px 2px 12px rgba(255, 255, 255, 0.2), inset -2px -2px 12px rgba(255, 255, 255, 0.2)",
+						background: isLight
+							? "rgba(37, 99, 235, 0.04)"
+							: "rgba(255, 255, 255, 0.05)",
+						boxShadow: isLight
+							? "inset 0 1px 1px rgba(255,255,255,0.6), 0 8px 30px rgba(37,99,235,0.08)"
+							: "inset 2px 2px 12px rgba(255, 255, 255, 0.2), inset -2px -2px 12px rgba(255, 255, 255, 0.2)",
+						border: isLight ? "1px solid rgba(37,99,235,0.1)" : "none",
 						backdropFilter: "blur(2px)",
 						WebkitBackdropFilter: "blur(2px)",
 						padding: "16px 36px",
@@ -219,7 +225,9 @@ export default function HeroSection() {
 							fontWeight: 900,
 							letterSpacing: "4px",
 							lineHeight: 1.1,
-							background: "linear-gradient(135deg, #818CF8, #22D3EE)",
+							backgroundImage: isLight
+								? "linear-gradient(135deg, #1E3A8A, #2563EB 55%, #0EA5E9)"
+								: "linear-gradient(135deg, #818CF8, #22D3EE)",
 							WebkitBackgroundClip: "text",
 							WebkitTextFillColor: "transparent",
 							backgroundClip: "text",
@@ -234,7 +242,7 @@ export default function HeroSection() {
 							fontSize: "clamp(9px, 1.2vw, 11px)",
 							fontWeight: 600,
 							letterSpacing: "0.22em",
-							color: "rgba(255, 255, 255, 0.55)",
+							color: isLight ? "#56688A" : "rgba(255, 255, 255, 0.55)",
 							marginTop: 6,
 							textTransform: "uppercase",
 						}}

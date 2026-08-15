@@ -3,6 +3,7 @@ import HeroSection from '@/components/HeroSection';
 import StatsSection from '@/components/StatsSection';
 import CertificationBadges from '@/components/CertificationBadges';
 import ServicesSection from '@/components/ServicesSection';
+import StackCards from '@/components/StackCards';
 import WhyChooseUs from '@/components/WhyChooseUs';
 import AboutSection from '@/components/AboutSection';
 import TestimonialsSection from '@/components/TestimonialsSection';
@@ -17,6 +18,7 @@ export default function Home() {
         <HeroSection />
         {/* <CertificationBadges /> */}
         <ServicesSection />
+        <StackCards />
         {/* <WhyChooseUs /> */}
         <AboutSection />
         <TestimonialsSection />

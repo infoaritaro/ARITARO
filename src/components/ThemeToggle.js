@@ -5,12 +5,12 @@ import { useEffect, useState, useSyncExternalStore } from 'react';
 const THEME_STORAGE_KEY = 'aritaro-theme';
 
 function getThemeSnapshot() {
-  if (typeof window === 'undefined') return 'dark';
-  return localStorage.getItem(THEME_STORAGE_KEY) || 'dark';
+  if (typeof window === 'undefined') return 'light';
+  return localStorage.getItem(THEME_STORAGE_KEY) || 'light';
 }
 
 function getThemeServerSnapshot() {
-  return 'dark';
+  return 'light';
 }
 
 function subscribeTheme(callback) {
@@ -26,10 +26,17 @@ function subscribeTheme(callback) {
   };
 }
 
+function applyTheme(next) {
+  const el = document.documentElement;
+  el.setAttribute('data-theme', next);
+  el.classList.toggle('dark', next === 'dark');
+  el.style.background = next === 'light' ? '#F5F8FE' : '#030508';
+}
+
 function setTheme(next) {
   if (typeof window === 'undefined') return;
   localStorage.setItem(THEME_STORAGE_KEY, next);
-  document.documentElement.setAttribute('data-theme', next);
+  applyTheme(next);
   window.dispatchEvent(new Event('aritaro-theme'));
 }
 
@@ -40,7 +47,7 @@ export default function ThemeToggle() {
   useEffect(() => { setMounted(true); }, []);
 
   useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
+    applyTheme(theme);
   }, [theme]);
 
   const toggle = () => {

@@ -166,11 +166,11 @@ export default function Navbar() {
           display: 'flex',
           alignItems: 'center',
           padding: '0',
-          background: scrolled ? 'rgba(15, 23, 42, 0.4)' : 'transparent',
-          borderBottom: `1px solid ${scrolled ? 'rgba(255, 255, 255, 0.08)' : 'transparent'}`,
+          background: scrolled ? 'var(--nav-bg-scrolled)' : 'transparent',
+          borderBottom: `1px solid ${scrolled ? 'var(--nav-border-scrolled)' : 'transparent'}`,
           backdropFilter: scrolled ? 'blur(16px)' : 'none',
           WebkitBackdropFilter: scrolled ? 'blur(16px)' : 'none',
-          boxShadow: scrolled ? '0 8px 32px rgba(0,0,0,0.2)' : 'none',
+          boxShadow: scrolled ? '0 8px 32px rgba(11,30,59,0.08)' : 'none',
           transition: 'background 0.4s cubic-bezier(0.16,1,0.3,1), border-color 0.4s cubic-bezier(0.16,1,0.3,1), box-shadow 0.4s cubic-bezier(0.16,1,0.3,1)',
         }}
       >
@@ -213,9 +213,8 @@ export default function Navbar() {
                   fontSize: 16,
                   fontWeight: 700,
                   letterSpacing: '0.08em',
-                  color: '#E2E8F0',
+                  color: 'var(--nav-logo-text)',
                   lineHeight: 1.1,
-                  textShadow: scrolled ? 'none' : '0 1px 8px rgba(0,0,0,0.3)',
                 }}>
                   ARITARO
                 </span>
@@ -234,8 +233,8 @@ export default function Navbar() {
             <button
               onClick={openCart}
               style={{
-                background: 'rgba(255, 255, 255, 0.03)',
-                border: '1px solid rgba(255, 255, 255, 0.08)',
+                background: 'var(--secondary)',
+                border: '1px solid var(--border-subtle)',
                 borderRadius: 10,
                 width: 38,
                 height: 38,
@@ -244,20 +243,20 @@ export default function Navbar() {
                 justifyContent: 'center',
                 position: 'relative',
                 cursor: 'pointer',
-                color: '#94A3B8',
+                color: 'var(--text-muted)',
                 transition: 'all 0.2s',
                 marginRight: 6,
               }}
               title="View Selected Services"
               onMouseEnter={(e) => {
-                e.currentTarget.style.color = '#fff';
-                e.currentTarget.style.borderColor = 'rgba(59, 130, 246, 0.3)';
-                e.currentTarget.style.background = 'rgba(59, 130, 246, 0.04)';
+                e.currentTarget.style.color = 'var(--cta)';
+                e.currentTarget.style.borderColor = 'rgba(37, 99, 235, 0.3)';
+                e.currentTarget.style.background = 'rgba(37, 99, 235, 0.06)';
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.color = '#94A3B8';
-                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.08)';
-                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.03)';
+                e.currentTarget.style.color = 'var(--text-muted)';
+                e.currentTarget.style.borderColor = 'var(--border-subtle)';
+                e.currentTarget.style.background = 'var(--secondary)';
               }}
             >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -271,7 +270,7 @@ export default function Navbar() {
                     position: 'absolute',
                     top: -4,
                     right: -4,
-                    background: '#3B82F6',
+                    background: 'var(--cta)',
                     color: '#fff',
                     fontSize: 9,
                     fontWeight: 700,
@@ -281,8 +280,8 @@ export default function Navbar() {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    border: '1.5px solid #000',
-                    boxShadow: '0 2px 8px rgba(0,0,0,0.5)',
+                    border: '1.5px solid var(--bg-base)',
+                    boxShadow: '0 2px 8px rgba(11,30,59,0.25)',
                     paddingLeft: 1,
                   }}
                 >
@@ -308,18 +307,18 @@ export default function Navbar() {
                   href="/login"
                   style={{
                     fontSize: 13, fontWeight: 600,
-                    color: '#94A3B8',
+                    color: 'var(--text-primary)',
                     padding: '8px 16px',
-                    border: '1px solid rgba(51,65,85,0.6)',
+                    border: '1px solid var(--border-subtle)',
                     borderRadius: 10,
                     transition: 'all 0.25s cubic-bezier(0.16,1,0.3,1)',
                     fontFamily: 'var(--font-sans)',
-                    background: 'rgba(15,23,42,0.4)',
+                    background: 'var(--secondary)',
                     cursor: 'pointer',
                     textDecoration: 'none',
                   }}
-                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(99,102,241,0.4)'; e.currentTarget.style.color = '#E2E8F0'; e.currentTarget.style.background = 'rgba(99,102,241,0.08)'; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(51,65,85,0.6)'; e.currentTarget.style.color = '#94A3B8'; e.currentTarget.style.background = 'rgba(15,23,42,0.4)'; }}
+                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(37,99,235,0.4)'; e.currentTarget.style.color = 'var(--cta)'; e.currentTarget.style.background = 'rgba(37,99,235,0.08)'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--border-subtle)'; e.currentTarget.style.color = 'var(--text-primary)'; e.currentTarget.style.background = 'var(--secondary)'; }}
                 >
                   Login
                 </Link>

@@ -193,7 +193,7 @@ function SpringTiltCard({ service, cardRef: externalRef }) {
       onMouseLeave={handleLeave}
       style={{
         position: 'relative',
-        background: '',
+        background: 'var(--service-card-bg)',
         border: `1px solid var(--service-card-border)`,
         borderRadius: 16,
         padding: '26px 22px',
@@ -347,9 +347,9 @@ function CartButton({ service }) {
         justifyContent: 'center',
         gap: 6,
         border: '1px solid',
-        borderColor: added ? '#3B82F6' : 'rgba(255,255,255,0.08)',
-        color: added ? '#3B82F6' : '#94A3B8',
-        background: added ? 'rgba(59, 130, 246, 0.08)' : 'rgba(255, 255, 255, 0.02)',
+        borderColor: added ? 'var(--cta)' : 'var(--border-subtle)',
+        color: added ? 'var(--cta)' : 'var(--text-muted)',
+        background: added ? 'rgba(37, 99, 235, 0.08)' : 'transparent',
         cursor: 'pointer',
         borderRadius: 8,
         transition: 'all 0.2s ease-in-out',
@@ -357,16 +357,16 @@ function CartButton({ service }) {
       }}
       onMouseEnter={(e) => {
         if (!added) {
-          e.currentTarget.style.borderColor = 'rgba(59, 130, 246, 0.4)';
-          e.currentTarget.style.color = '#fff';
-          e.currentTarget.style.background = 'rgba(59, 130, 246, 0.04)';
+          e.currentTarget.style.borderColor = 'rgba(37, 99, 235, 0.4)';
+          e.currentTarget.style.color = 'var(--cta)';
+          e.currentTarget.style.background = 'rgba(37, 99, 235, 0.06)';
         }
       }}
       onMouseLeave={(e) => {
         if (!added) {
-          e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)';
-          e.currentTarget.style.color = '#94A3B8';
-          e.currentTarget.style.background = 'rgba(255, 255, 255, 0.02)';
+          e.currentTarget.style.borderColor = 'var(--border-subtle)';
+          e.currentTarget.style.color = 'var(--text-muted)';
+          e.currentTarget.style.background = 'transparent';
         }
       }}
     >
@@ -481,11 +481,10 @@ export default function ServicesSection() {
           }}>
             Security that{' '}
             <span style={{
-              background: 'linear-gradient(135deg, #6366F1 0%, #818CF8 60%, #6366F1 100%)',
+              backgroundImage: 'linear-gradient(135deg, #2563EB 0%, #0EA5E9 60%, #2563EB 100%)',
               backgroundClip: 'text',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
-              filter: 'drop-shadow(0 0 12px rgba(99,102,241,0.35))',
             }}>
               protects
             </span>

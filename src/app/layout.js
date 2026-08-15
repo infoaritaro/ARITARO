@@ -47,13 +47,32 @@ export const metadata = {
 	},
 };
 
+const themeInitScript = `
+(function () {
+  try {
+    var stored = localStorage.getItem('aritaro-theme');
+    var theme = stored === 'dark' || stored === 'light' ? stored : 'light';
+    var el = document.documentElement;
+    el.setAttribute('data-theme', theme);
+    el.classList.toggle('dark', theme === 'dark');
+    el.style.background = theme === 'light' ? '#F5F8FE' : '#030508';
+  } catch (e) {}
+})();
+`;
+
 export default function RootLayout({ children }) {
 	return (
 		<html
 			lang="en"
-			data-theme="dark"
-			className={`dark ${inter.variable} ${jetbrainsMono.variable}`}
+			data-theme="light"
+			className={`${inter.variable} ${jetbrainsMono.variable}`}
+			suppressHydrationWarning
 		>
+			<head>
+				<script
+					dangerouslySetInnerHTML={{ __html: themeInitScript }}
+				/>
+			</head>
 			<body
 				className="min-h-screen antialiased overflow-x-hidden"
 				style={{

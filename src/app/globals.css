@@ -150,6 +150,123 @@
   --accent-red-dim: #dc2626;
 }
 
+/* ── LIGHT THEME (premium white + blue) ──
+   Complete token override so every surface, border and text
+   colour flips cleanly. This is what makes light mode look
+   like a finished enterprise product instead of a broken dark theme. */
+[data-theme="light"] {
+  /* Backgrounds */
+  --bg-base: #F5F8FE;
+  --bg-surface: #FFFFFF;
+  --bg-elevated: #FFFFFF;
+  --background: #F5F8FE;
+  --foreground: #0B1E3B;
+  --card: #FFFFFF;
+  --card-foreground: #0B1E3B;
+  --popover: #FFFFFF;
+  --popover-foreground: #0B1E3B;
+
+  /* Primary / Secondary */
+  --primary: #2563EB;
+  --primary-foreground: #FFFFFF;
+  --secondary: #EEF3FC;
+  --secondary-foreground: #0B1E3B;
+  --muted: #EEF3FC;
+  --muted-foreground: #56688A;
+  --accent: #0EA5E9;
+  --accent-foreground: #FFFFFF;
+  --destructive: #DC2626;
+  --destructive-foreground: #FFFFFF;
+
+  /* Borders */
+  --border-subtle: #E2E9F5;
+  --border: #E2E9F5;
+  --border-focus: rgba(37, 99, 235, 0.4);
+  --input: #E2E9F5;
+  --ring: #2563EB;
+
+  /* Text */
+  --text-primary: #0B1E3B;
+  --text-muted: #56688A;
+
+  /* Brand */
+  --cta: #2563EB;
+  --c-green: #16A34A;
+  --c-amber: #D97706;
+
+  /* Navbar */
+  --nav-bg: transparent;
+  --nav-bg-scrolled: rgba(255, 255, 255, 0.85);
+  --nav-border-scrolled: rgba(226, 233, 245, 0.9);
+  --nav-shadow: 0 1px 0 rgba(226, 233, 245, 0.9);
+  --nav-text: #56688A;
+  --nav-text-hover: #0B1E3B;
+  --nav-logo-text: #0B1E3B;
+  --mobile-menu-bg: rgba(255, 255, 255, 0.97);
+  --mobile-menu-border: #E2E9F5;
+
+  /* Cards */
+  --card-bg: #FFFFFF;
+  --card-border: #E2E9F5;
+
+  /* Footer */
+  --footer-bg: #0B1E3B;
+  --footer-heading: #FFFFFF;
+  --footer-link-hover: #60A5FA;
+
+  /* Sections / hero */
+  --hero-bg: #F5F8FE;
+  --hero-badge-bg: rgba(37, 99, 235, 0.08);
+  --hero-badge-border: rgba(37, 99, 235, 0.2);
+  --hero-badge-text: #2563EB;
+  --hero-subtitle: #56688A;
+  --hero-stat-label: #56688A;
+
+  /* Service cards */
+  --service-card-bg: #FFFFFF;
+  --service-card-border: #E2E9F5;
+  --service-card-shadow: 0 1px 3px rgba(11, 30, 59, 0.06);
+  --service-card-hover-border: rgba(37, 99, 235, 0.45);
+  --service-card-hover-bg: #FFFFFF;
+  --service-card-hover-shadow: 0 18px 44px rgba(37, 99, 235, 0.14);
+
+  /* Glass */
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-border: #E2E9F5;
+  --glass-bg-dark: rgba(245, 248, 254, 0.85);
+
+  /* Legacy aliases */
+  --bg-primary: var(--bg-base);
+  --bg-secondary: var(--bg-surface);
+  --text-secondary: var(--text-muted);
+  --cyan-primary: #2563EB;
+  --cyan-secondary: #0EA5E9;
+
+  /* Testimonials */
+  --testimonial-bg: linear-gradient(180deg, #F5F8FE 0%, #FFFFFF 50%, #F5F8FE 100%);
+  --testimonial-fade: #F5F8FE;
+  --testimonial-card-bg: #FFFFFF;
+  --testimonial-card-border: #E2E9F5;
+  --testimonial-star: #F59E0B;
+  --testimonial-tag-bg: rgba(37, 99, 235, 0.06);
+  --testimonial-tag-border: rgba(37, 99, 235, 0.18);
+  --testimonial-quote-mark: rgba(37, 99, 235, 0.1);
+  --testimonial-quote-text: #0B1E3B;
+  --testimonial-author-name: #0B1E3B;
+  --testimonial-author-role: #56688A;
+  --testimonial-company: #2563EB;
+  --testimonial-avatar-bg: linear-gradient(135deg, rgba(37, 99, 235, 0.15), #EEF3FC);
+  --testimonial-avatar-border: rgba(37, 99, 235, 0.2);
+  --testimonial-avatar-text: #2563EB;
+  --testimonial-shimmer: rgba(37, 99, 235, 0.15);
+  --testimonial-divider: rgba(37, 99, 235, 0.08);
+  --testimonial-stat-bg: rgba(37, 99, 235, 0.04);
+  --testimonial-stat-border: rgba(37, 99, 235, 0.1);
+  --testimonial-badge-text: #2563EB;
+  --testimonial-badge-bg: rgba(37, 99, 235, 0.08);
+  --testimonial-badge-border: rgba(37, 99, 235, 0.18);
+}
+
 /* ═══════════════════════════════════════════════════
    BASE RESET & TYPOGRAPHY
    ═══════════════════════════════════════════════════ */
@@ -927,7 +1044,7 @@ h6 {
   color: var(--text-primary);
 }
 
-/* ═══════════════════════════════════════════════════
+/* ═══════════���═══════════════════════════════════════
    ABOUT SECTION GRID (legacy class)
    ═══════════════════════════════════════════════════ */
 
