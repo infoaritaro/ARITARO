@@ -1,5 +1,6 @@
 import "./globals.css";
 import NavigationWrapper from "@/components/NavigationWrapper";
+import FooterWrapper from "@/components/FooterWrapper";
 import { Providers } from "./providers";
 import { Toaster } from "@/components/ui/sonner";
 
@@ -36,6 +37,15 @@ export const metadata = {
 	alternates: {
 		canonical: defaultBaseUrl,
 	},
+	icons: {
+		icon: [
+			{ url: "/aritaro-logo.png", type: "image/png", sizes: "any" },
+		],
+		apple: [
+			{ url: "/aritaro-logo.png" },
+		],
+		shortcut: "/aritaro-logo.png",
+	},
 	openGraph: {
 		title: "Aritaro Pvt Limited | Enterprise Cybersecurity & AI Automation",
 		description:
@@ -51,10 +61,16 @@ export default function RootLayout({ children }) {
 	return (
 		<html
 			lang="en"
+			suppressHydrationWarning
 			data-theme="dark"
 			className={`dark ${inter.variable} ${jetbrainsMono.variable}`}
 		>
+			<head>
+				<link rel="icon" href="/aritaro-logo.png" type="image/png" />
+				<link rel="shortcut icon" href="/aritaro-logo.png" type="image/png" />
+			</head>
 			<body
+				suppressHydrationWarning
 				className="min-h-screen antialiased overflow-x-hidden"
 				style={{
 					fontFamily: "var(--font-sans)",
@@ -67,6 +83,7 @@ export default function RootLayout({ children }) {
 					{/* <GlobalBackground /> */}
 					<NavigationWrapper />
 					{children}
+					<FooterWrapper />
 					<Toaster position="top-right" richColors closeButton />
 				</Providers>
 			</body>

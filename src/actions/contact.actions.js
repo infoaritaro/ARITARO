@@ -3,6 +3,7 @@
 import connectDB from "@/lib/db";
 import ContactRequest from "@/models/ContactRequest";
 import ServiceRequest from "@/models/ServiceRequest";
+import JobApplication from "@/models/JobApplication";
 import Notification from "@/models/Notification";
 import User from "@/models/User";
 import AuditLog from "@/models/AuditLog";
@@ -40,11 +41,6 @@ const dbUnavailable = {
 };
 
 export async function submitContact(formData) {
-	const session = await getSession();
-	if (!session || !session.user) {
-		return { success: false, error: "You must be logged in to submit a contact request." };
-	}
-
 	const raw = {
 		name: formData.get("name"),
 		email: formData.get("email"),
@@ -61,17 +57,81 @@ export async function submitContact(formData) {
 
 	if (!(await initApp())) return dbUnavailable;
 
-	await ContactRequest.create({
-		type: "contact",
+	try {
+		await ContactRequest.create({
+			type: "contact",
+			name: sanitizeInput(parsed.data.name),
+			email: parsed.data.email.trim().toLowerCase(),
+			company: parsed.data.company ? sanitizeInput(parsed.data.company) : undefined,
+			phone: parsed.data.phone ? sanitizeInput(parsed.data.phone) : undefined,
+			subject: sanitizeInput(parsed.data.subject),
+			message: sanitizeInput(parsed.data.message),
+		});
+
+		// Trigger email via nodemailer
+		try {
+			const { sendMail, buildContactEmailHtml, buildContactEmailText } = await import("@/lib/mailer");
+			const adminEmail = process.env.ADMIN_EMAIL || "info@aritaro.in";
+			await sendMail({
+				to: adminEmail,
+				subject: `[Aritaro Contact] ${parsed.data.subject} — from ${parsed.data.name}`,
+				html: buildContactEmailHtml(parsed.data),
+				text: buildContactEmailText(parsed.data),
+			});
+		} catch (mailErr) {
+			console.error("Nodemailer dispatch failed (non-blocking):", mailErr);
+		}
+
+		return { success: true, message: "Message sent! We'll respond within 24 hours." };
+	} catch (err) {
+		console.error("Contact request creation error:", err);
+		return { success: false, error: "Failed to submit message. Please try again." };
+	}
+}
+
+export async function submitCareerApplication(formData) {
+	const raw = {
+		name: formData.get("name"),
+		email: formData.get("email"),
+		phone: formData.get("phone") || undefined,
+		position: formData.get("position"),
+		portfolioUrl: formData.get("portfolioUrl") || undefined,
+		resumeUrl: formData.get("resumeUrl") || undefined,
+		experience: formData.get("experience") || undefined,
+		coverLetter: formData.get("coverLetter") || undefined,
+	};
+
+	const parsed = z.object({
+		name: z.string().min(1, "Name is required"),
+		email: z.string().email("Valid email is required"),
+		phone: z.string().optional().or(z.literal("")),
+		position: z.string().min(1, "Position is required"),
+		portfolioUrl: z.string().url("Portfolio URL must be valid").optional().or(z.literal("")),
+		resumeUrl: z.string().url("Resume URL must be valid").optional().or(z.literal("")),
+		experience: z.string().optional().or(z.literal("")),
+		coverLetter: z.string().optional().or(z.literal("")),
+	}).safeParse(raw);
+
+	if (!parsed.success) {
+		return { success: false, error: parsed.error.issues[0]?.message };
+	}
+
+	if (!(await initApp())) return dbUnavailable;
+
+	await JobApplication.create({
 		name: sanitizeInput(parsed.data.name),
-		email: parsed.data.email,
-		company: parsed.data.company ? sanitizeInput(parsed.data.company) : undefined,
-		phone: parsed.data.phone,
-		subject: sanitizeInput(parsed.data.subject),
-		message: sanitizeInput(parsed.data.message),
+		email: parsed.data.email.trim().toLowerCase(),
+		phone: parsed.data.phone ? sanitizeInput(parsed.data.phone) : undefined,
+		position: sanitizeInput(parsed.data.position),
+		portfolioUrl: parsed.data.portfolioUrl ? sanitizeInput(parsed.data.portfolioUrl) : undefined,
+		resumeUrl: parsed.data.resumeUrl ? sanitizeInput(parsed.data.resumeUrl) : undefined,
+		experience: parsed.data.experience ? sanitizeInput(parsed.data.experience) : undefined,
+		coverLetter: parsed.data.coverLetter ? sanitizeInput(parsed.data.coverLetter) : undefined,
+		source: "careers_page",
+		status: "new",
 	});
 
-	return { success: true, message: "Message sent! We'll respond within 24 hours." };
+	return { success: true, message: "Application submitted successfully. Our team will review it soon." };
 }
 
 export async function submitServiceRequest(formData) {
@@ -116,8 +176,8 @@ export async function submitServiceRequest(formData) {
 			desired_start_date: parsed.data.desired_start_date ? new Date(parsed.data.desired_start_date) : undefined,
 			deadline: parsed.data.deadline ? new Date(parsed.data.deadline) : undefined,
 			contact_name: sanitizeInput(parsed.data.contact_name),
-			contact_email: parsed.data.contact_email,
-			contact_phone: parsed.data.contact_phone,
+			contact_email: parsed.data.contact_email.trim().toLowerCase(),
+			contact_phone: parsed.data.contact_phone ? sanitizeInput(parsed.data.contact_phone) : undefined,
 			authorization_confirmed: parsed.data.authorization_confirmed,
 			sla_due_at,
 		});

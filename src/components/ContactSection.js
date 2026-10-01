@@ -14,7 +14,9 @@ const contactMethods = [
     ),
     label: 'Call Us',
     value: '+91 96258 94393',
+    href: 'tel:+919625894393',
     sub: 'Mon–Sat, 9AM–7PM IST',
+    type: 'tel',
   },
   {
     icon: (
@@ -25,7 +27,9 @@ const contactMethods = [
     ),
     label: 'Email',
     value: 'info@aritaro.in',
-    sub: 'Response within 2 hours',
+    href: 'mailto:info@aritaro.in',
+    sub: 'Response within 2 hours • Click to copy',
+    type: 'email',
   },
   {
     icon: (
@@ -34,9 +38,11 @@ const contactMethods = [
         <circle cx="12" cy="10" r="3" />
       </svg>
     ),
-    label: 'Office',
-    value: 'New Delhi, India',
-    sub: 'By appointment only',
+    label: 'Headquarters & Lab',
+    value: 'Sector 63, Noida (NCR), India',
+    href: 'https://www.google.com/maps/search/?api=1&query=A-14+Sector+63+Noida+Uttar+Pradesh+201301',
+    sub: 'A-14, Sector 63, Noida, UP 201301 • Open Google Maps ↗',
+    type: 'map',
   },
 ];
 
@@ -227,16 +233,34 @@ export default function ContactSection() {
             {/* Contact cards */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 28 }}>
               {contactMethods.map((method, i) => (
-                <div key={i} style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 14,
-                  padding: '14px 16px',
-                  background: 'var(--bg-surface)',
-                  border: '1px solid var(--border-subtle)',
-                  borderRadius: 10,
-                  transition: 'all 0.2s ease',
-                }}
+                <a
+                  key={i}
+                  href={method.href}
+                  target={method.href.startsWith('http') ? '_blank' : undefined}
+                  rel={method.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                  onClick={(e) => {
+                    if (method.type === 'email') {
+                      try {
+                        if (typeof navigator !== 'undefined' && navigator.clipboard) {
+                          navigator.clipboard.writeText(method.value);
+                          toast.success(`Copied email to clipboard: ${method.value}`);
+                        }
+                      } catch (err) { }
+                    }
+                  }}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 14,
+                    padding: '14px 16px',
+                    background: 'var(--bg-surface)',
+                    border: '1px solid var(--border-subtle)',
+                    borderRadius: 10,
+                    transition: 'all 0.2s ease',
+                    color: 'inherit',
+                    textDecoration: 'none',
+                    cursor: 'pointer',
+                  }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.borderColor = 'rgba(59,130,246,0.4)';
                     e.currentTarget.style.background = 'rgba(59, 130, 246, 0.08)';
@@ -278,13 +302,13 @@ export default function ContactSection() {
                       {method.sub}
                     </div>
                   </div>
-                </div>
+                </a>
               ))}
             </div>
 
             {/* Certs */}
             <div>
-              <div style={{
+              {/* <div style={{
                 fontSize: 11,
                 fontWeight: 500,
                 color: 'var(--text-muted)',
@@ -293,8 +317,8 @@ export default function ContactSection() {
                 marginBottom: 10,
               }}>
                 COMPLIANCE & CERTIFICATIONS
-              </div>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+              </div> */}
+              {/* <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
                 {['ISO 27001', 'SOC 2 Type II', 'CERT-In', 'GDPR', 'PCI-DSS'].map((cert) => (
                   <span key={cert} style={{
                     fontSize: 11,
@@ -307,7 +331,7 @@ export default function ContactSection() {
                     {cert}
                   </span>
                 ))}
-              </div>
+              </div> */}
             </div>
           </div>
 
@@ -493,6 +517,6 @@ export default function ContactSection() {
         input::placeholder, textarea::placeholder { color: var(--text-muted); opacity: 0.5; }
         select option { background: var(--bg-surface); color: var(--text-primary); }
       `}</style>
-    </section>
+    </section >
   );
 }

@@ -7,6 +7,7 @@ import Report from "@/models/Report";
 import AuditLog from "@/models/AuditLog";
 import CaseStudy from "@/models/CaseStudy";
 import JobOpportunity from "@/models/JobOpportunity";
+import JobApplication from "@/models/JobApplication";
 import { requireAdmin } from "@/lib/session";
 import { initApp } from "@/lib/init";
 import { sanitizeInput } from "@/lib/security";
@@ -24,16 +25,38 @@ export async function getAdminStats() {
 
 	if (!(await initApp())) return dbUnavailable;
 
-	const [adminCount, clientCount, contactCount, requestCount] = await Promise.all([
+	const now = new Date();
+	const monthStart = new Date(now.getFullYear(), now.getMonth() - 5, 1);
+	const [adminCount, clientCount, contactCount, requestCount, statusBreakdown, serviceBreakdown, monthlyTrend, recentRequests] = await Promise.all([
 		User.countDocuments({ role: "admin" }),
 		User.countDocuments({ role: { $in: ["company", "client"] } }),
 		ContactRequest.countDocuments(),
 		ServiceRequest.countDocuments(),
+		ServiceRequest.aggregate([{ $group: { _id: "$status", count: { $sum: 1 } } }, { $sort: { count: -1 } }]),
+		ServiceRequest.aggregate([{ $group: { _id: "$service_type", count: { $sum: 1 } } }, { $sort: { count: -1 } }]),
+		ServiceRequest.aggregate([
+			{ $match: { createdAt: { $gte: monthStart } } },
+			{ $group: { _id: { year: { $year: "$createdAt" }, month: { $month: "$createdAt" } }, count: { $sum: 1 } } },
+			{ $sort: { "_id.year": 1, "_id.month": 1 } },
+		]),
+		ServiceRequest.find().select("ticket_ref service_type status priority createdAt").sort({ createdAt: -1 }).limit(5).lean(),
 	]);
+
+	const trend = Array.from({ length: 6 }, (_, index) => {
+		const date = new Date(now.getFullYear(), now.getMonth() - 5 + index, 1);
+		const match = monthlyTrend.find((item) => item._id.year === date.getFullYear() && item._id.month === date.getMonth() + 1);
+		return { label: date.toLocaleString("en-US", { month: "short" }), count: match?.count || 0 };
+	});
 
 	return {
 		success: true,
-		stats: { adminCount, clientCount, contactCount, requestCount },
+		stats: {
+			adminCount, clientCount, contactCount, requestCount,
+			statusBreakdown: statusBreakdown.map((item) => ({ label: item._id, count: item.count })),
+			serviceBreakdown: serviceBreakdown.map((item) => ({ label: item._id, count: item.count })),
+			trend,
+			recentRequests: recentRequests.map((item) => ({ ...item, id: item._id.toString(), _id: undefined, createdAt: item.createdAt?.toISOString() ?? null })),
+		},
 	};
 }
 
@@ -422,6 +445,50 @@ export async function togglePublishCaseStudy(caseStudyId, isPublished) {
 
 	await CaseStudy.findByIdAndUpdate(caseStudyId, { isPublished });
 	return { success: true, message: "Publication state updated" };
+}
+
+export async function listJobApplications() {
+	const { authorized } = await requireAdmin();
+	if (!authorized) return { success: false, error: "Unauthorized" };
+	if (!(await initApp())) return dbUnavailable;
+
+	const applications = await JobApplication.find({}).sort({ createdAt: -1 }).lean();
+	return {
+		success: true,
+		applications: applications.map((app) => ({
+			id: app._id.toString(),
+			name: app.name,
+			email: app.email,
+			phone: app.phone || "",
+			position: app.position,
+			portfolioUrl: app.portfolioUrl || "",
+			resumeUrl: app.resumeUrl || "",
+			experience: app.experience || "",
+			coverLetter: app.coverLetter || "",
+			source: app.source || "careers_page",
+			status: app.status || "new",
+			createdAt: app.createdAt?.toISOString() ?? null,
+		})),
+	};
+}
+
+export async function updateJobApplicationStatus(applicationId, status) {
+	const { authorized } = await requireAdmin();
+	if (!authorized) return { success: false, error: "Unauthorized" };
+	if (!(await initApp())) return dbUnavailable;
+
+	const allowedStatuses = ["new", "reviewing", "shortlisted", "rejected", "hired"];
+	const nextStatus = sanitizeInput(String(status || "").trim());
+	if (!allowedStatuses.includes(nextStatus)) {
+		return { success: false, error: "Invalid status" };
+	}
+
+	const app = await JobApplication.findByIdAndUpdate(applicationId, { status: nextStatus }, { new: true });
+	if (!app) {
+		return { success: false, error: "Application not found" };
+	}
+
+	return { success: true, message: "Application status updated", status: app.status };
 }
 
 export async function listJobOpportunities() {

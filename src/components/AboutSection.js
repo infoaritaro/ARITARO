@@ -18,6 +18,7 @@ export default function AboutSection() {
   const leftRef = useRef(null);
   const rightRef = useRef(null);
   const [mounted, setMounted] = useState(false);
+  const [videoFailed, setVideoFailed] = useState(false);
 
   useEffect(() => { setMounted(true); }, []);
 
@@ -117,12 +118,15 @@ export default function AboutSection() {
               position: 'relative',
               aspectRatio: '16/10',
             }}>
-              {mounted && (
+              {mounted && !videoFailed && (
                 <video
                   autoPlay
                   muted
                   loop
                   playsInline
+                  preload="metadata"
+                  onError={() => setVideoFailed(true)}
+                  poster="/og-image.jpg"
                   style={{
                     width: '100%',
                     height: '100%',
@@ -134,6 +138,17 @@ export default function AboutSection() {
                 >
                   <source src="/grok-video-be4a4f39-a70b-41ec-af1d-5cf4d274b1aa.mp4" type="video/mp4" />
                 </video>
+              )}
+              {videoFailed && (
+                <div style={{
+                  position: 'absolute', inset: 0,
+                  background: 'radial-gradient(circle at 30% 20%, rgba(99,102,241,0.35), transparent 32%), linear-gradient(135deg, #070b17 0%, #111827 45%, #0f172a 100%)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  color: 'white', fontFamily: 'var(--font-orbitron), monospace', letterSpacing: '0.18em',
+                  fontSize: 12, textTransform: 'uppercase',
+                }}>
+                  Security overview
+                </div>
               )}
               {/* Overlay tint */}
               <div style={{
@@ -149,7 +164,7 @@ export default function AboutSection() {
             </div>
 
             {/* ── Floating stat card (bottom-left) ── */}
-            <div style={{
+            {/* <div style={{
               position: 'absolute',
               bottom: -24,
               left: -20,
@@ -161,6 +176,7 @@ export default function AboutSection() {
               padding: '20px 24px',
               boxShadow: '0 16px 48px rgba(0,0,0,0.5)',
               minWidth: 180,
+              zIndex: 2,
             }}>
               <div style={{
                 fontFamily: 'var(--font-orbitron), monospace',
@@ -178,25 +194,25 @@ export default function AboutSection() {
                 Threat detection &amp;<br />prevention rate
               </div>
               {/* Active indicator */}
-              <div style={{
-                display: 'flex', alignItems: 'center', gap: 6, marginTop: 10,
+            {/* <div style={{
+              display: 'flex', alignItems: 'center', gap: 6, marginTop: 10,
+            }}>
+              <span style={{
+                width: 6, height: 6, borderRadius: '50%',
+                background: '#00FF9C', boxShadow: '0 0 6px rgba(0,255,156,0.6)',
+                animation: 'pulse-glow 2s ease-in-out infinite',
+              }} />
+              <span style={{
+                fontFamily: 'var(--font-orbitron), monospace',
+                fontSize: 8, letterSpacing: '1.5px', color: 'rgba(0,255,156,0.7)',
               }}>
-                <span style={{
-                  width: 6, height: 6, borderRadius: '50%',
-                  background: '#00FF9C', boxShadow: '0 0 6px rgba(0,255,156,0.6)',
-                  animation: 'pulse-glow 2s ease-in-out infinite',
-                }} />
-                <span style={{
-                  fontFamily: 'var(--font-orbitron), monospace',
-                  fontSize: 8, letterSpacing: '1.5px', color: 'rgba(0,255,156,0.7)',
-                }}>
-                  LIVE MONITORING
-                </span>
-              </div>
+                LIVE MONITORING
+              </span>
             </div>
+          </div> */}
 
             {/* ── Second floating card (top-right) ── */}
-            <div style={{
+            {/* <div style={{
               position: 'absolute',
               top: -20,
               right: -20,
@@ -206,6 +222,7 @@ export default function AboutSection() {
               border: '1px solid var(--glass-border)',
               borderRadius: 10,
               padding: '14px 18px',
+              zIndex: 2,
             }}>
               <div style={{
                 fontFamily: 'var(--font-orbitron), monospace',
@@ -221,7 +238,7 @@ export default function AboutSection() {
               }}>
                 Enterprise Clients
               </div>
-            </div>
+            </div> */}
           </div>
 
           {/* ── RIGHT: Text content ── */}
@@ -288,6 +305,6 @@ export default function AboutSection() {
           100% { top: 100%; opacity: 0; }
         }
       `}</style>
-    </section>
+    </section >
   );
 }
